@@ -17,24 +17,9 @@
     /*
        *e
        Tasks:
-       `Only get string for population ONCE per page.
           (See if per-page things are possible as well, & restart on refreshes, and...)
-
        `see if you can add different behaviors per page (like the pages allowed in the matched pages above)
-
-       `rates get inaccurate when you hit 600, then it jumps to 1200 sometimes
-
-       `When the pokerus time hits a certain time, stop reporting the rates needed for pokerus, it'll just grow a ton
-
-       `inject css and edit the css, then replace the lgos with the css updates.
-
-       `update the css ONCE, with all the information every set of seconds
-
-       `find out how to make options for the program, THEN make:
-          switch for pokerus,
-          switch for min or second formats,
-          field/slider for refresh speed (stopping at 4seconds, smh)
-          [collect these from the css on each update? idk if that changes, though.]
+       `the rest is on github btw
        *
     */
     //var wholeCSS = document.getElementById("header");
