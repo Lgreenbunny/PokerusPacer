@@ -70,11 +70,11 @@
         var dateATM = document.getElementById("servertimeclock").textContent;
         var inter = document.getElementById("field_globalmeta").textContent;
 
-        console.log("~");
+        /*console.log("~");
         console.log("~ ~ Massclick logs:");
         //console.log(dateATM);
         //console.log(pop);
-        //console.log(inter);
+        //console.log(inter);*/
         clickCalc(dateATM, inter);
     }
 
