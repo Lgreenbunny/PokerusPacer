@@ -21,21 +21,15 @@
        `see if you can add different behaviors per page (like the pages allowed in the matched pages above)
        `the rest is on github btw
        *
-
        Editing the CSS...
           In div id=content in the public field html sheet, put a new div as the last child of the content div. Then center it (put class="center" in the <> with the ID)
               and put the clicking stats there that update regularly~ to put it as the last child:
           HTML DOM insertAdjacentElement(), using "afterend" will put it right under the element.
-
           1st make the element, then insert it
               x = Document.createElement(),
               ele.setAttribute("id", "ID_NAME")
               ele.set...("textContent", "UPDATED TEXT HEREREE")
-
           also edit textContent of the property, not innerHTML.
-
-
-
     */
     //var wholeCSS = document.getElementById("header");
 
@@ -87,7 +81,6 @@
     function clickCalc(date, interac){
         var stringy = "";
         /*date & interaction formats:
-
         27/Sep/2020 05:52:09 (used for the pokerus timer in the future, just get it to display massclick stuff for now)
         Population: 5,859 PokémonInteractions: 114 sent / 114 received
         */
@@ -151,12 +144,12 @@
             //Pokerus speed calc here using ^ information above, put function heer
             //use past int & current int to calculate how fast per 10sec, then div by 10
             var remainTime = (15*60) - ((timeMin % 15)*60) - timeSec;
-            var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time
+            var rateNeed = (numPop-numInt)*1.0/remainTime; //per second, based on pokerus time
 
             //console.log("%.2f clicks/min needed to beat pokerus (%d click/sec)...", (rateNeed*60), rateNeed);
             //calc if it's fast enough for complete pokerus, (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)
             /*var rateHave = ;*/
-            var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+            var rateHave = (numInt - pastInt)*1.0/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
 
             //display clik/sec, & click/sec needed 2 fullclick
             /*
