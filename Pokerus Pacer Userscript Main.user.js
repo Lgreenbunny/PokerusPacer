@@ -164,8 +164,8 @@
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
             // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
-            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
-You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
+            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...\n
+You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...\n
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
             printCSSssS(stringy);
 
@@ -173,6 +173,7 @@ You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (
     }
 
     function printCSSssS(stringy){
-        console.log(stringy);//will be replaced with CSS/HTML manipulationss
+        //console.log(stringy);//will be replaced with CSS/HTML manipulationss
+        announcer.textContent = stringy;
     }
 })();
