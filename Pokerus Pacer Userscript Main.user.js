@@ -21,21 +21,15 @@
        `see if you can add different behaviors per page (like the pages allowed in the matched pages above)
        `the rest is on github btw
        *
-
        Editing the CSS...
           In div id=content in the public field html sheet, put a new div as the last child of the content div. Then center it (put class="center" in the <> with the ID)
               and put the clicking stats there that update regularly~ to put it as the last child:
           HTML DOM insertAdjacentElement(), using "afterend" will put it right under the element.
-
           1st make the element, then insert it
               x = Document.createElement(),
               ele.setAttribute("id", "ID_NAME")
               ele.set...("textContent", "UPDATED TEXT HEREREE")
-
           also edit textContent of the property, not innerHTML.
-
-
-
     */
     //var wholeCSS = document.getElementById("header");
 
@@ -87,7 +81,6 @@
     function clickCalc(date, interac){
         var stringy = "";
         /*date & interaction formats:
-
         27/Sep/2020 05:52:09 (used for the pokerus timer in the future, just get it to display massclick stuff for now)
         Population: 5,859 PokémonInteractions: 114 sent / 114 received
         */
@@ -152,6 +145,7 @@
             //use past int & current int to calculate how fast per 10sec, then div by 10
             var remainTime = (15*60) - ((timeMin % 15)*60) - timeSec;
 
+
             if(remainTime < 30){//say that pkrs is almost done
                 announcer.textContent = "PKRS almost done...";
             }
@@ -169,6 +163,7 @@
             console.log("You're doing %.2f clicks/min right now (%d click/sec)", (rateHave*60), rateHave);
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
+
                 // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
                 stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
@@ -180,6 +175,7 @@ You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (
     }
 
     function printCSSssS(stringy){
-        console.log(stringy);//will be replaced with CSS/HTML manipulationss
+        //console.log(stringy);//will be replaced with CSS/HTML manipulationss
+        announcer.textContent = stringy;
     }
 })();
