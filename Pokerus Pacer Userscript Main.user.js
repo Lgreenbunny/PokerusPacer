@@ -151,23 +151,30 @@
             //Pokerus speed calc here using ^ information above, put function heer
             //use past int & current int to calculate how fast per 10sec, then div by 10
             var remainTime = (15*60) - ((timeMin % 15)*60) - timeSec;
-            var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time
 
-            //console.log("%.2f clicks/min needed to beat pokerus (%d click/sec)...", (rateNeed*60), rateNeed);
-            //calc if it's fast enough for complete pokerus, (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)
-            /*var rateHave = ;*/
-            var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+            if(remainTime < 30){//say that pkrs is almost done
+                announcer.textContent = "PKRS almost done...";
+            }
+            else{//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
 
-            //display clik/sec, & click/sec needed 2 fullclick
-            /*
+                var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time
+
+                //console.log("%.2f clicks/min needed to beat pokerus (%d click/sec)...", (rateNeed*60), rateNeed);
+                //calc if it's fast enough for complete pokerus, (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)
+                /*var rateHave = ;*/
+                var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+
+                //display clik/sec, & click/sec needed 2 fullclick
+                /*
             console.log("You're doing %.2f clicks/min right now (%d click/sec)", (rateHave*60), rateHave);
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
-            // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
-            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
+                // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
+                stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-            printCSSssS(stringy);
+                printCSSssS(stringy);
+            }
 
         }
     }
