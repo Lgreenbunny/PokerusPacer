@@ -37,7 +37,7 @@
     //
     //gets the date, curent population and sent interactions, should ong fetch pop. once tbh, wait until element loaded 1st.
     var /*pop, */pastInt = 0;
-    var pokerus = true, total = false;
+    var pokerus = true, total = true;//runs pokerus and total functions
     var numInt = 0;
     var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
@@ -57,11 +57,19 @@
 
     function loopy(){
 
-        setInterval(updaterer, (refreshR*1000));//runs main loop every 10s.
+        setInterval(updaterer, (refreshR*1000));//runs main loop every #s.
         announcer = document.createElement("p");
-        announcer.setAttribute("id", "ID_NAME")
-        announcer.textContent = "UPDATED TEXT HEREREE";
+        announcer.setAttribute("id", "Pokerus_Pacer");
+        announcer.textContent = "Loading...";
         document.getElementById("field_field").insertAdjacentElement('afterend', announcer);
+
+        setTimeout(function d(){
+            var e = document.getElementsByName("Pokerus_Pacer").length;
+            if(e = 0){
+                document.getElementByName("field_field").insertAdjacentElement('afterend', announcer);
+            }
+        },
+                   (5000));//checks if the element actually loaded in the document, if not, try again.
     }
 
 
