@@ -41,6 +41,9 @@
     var numInt = 0;
     var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
+    var rates = [0,0,0,0];
+    var rateHave = 0;
+    var lastTime = 0;//last int count + last time in seconds based on site clock
     window.addEventListener("load", starter);
 
     //populationcount and clickcount_act_sent arent div, they're SPANS?.
@@ -94,7 +97,6 @@
 
 
     function clickCalc(date, interac){
-        var stringy = "";
         /*date & interaction formats:
         27/Sep/2020 05:52:09 (used for the pokerus timer in the future, just get it to display massclick stuff for now)
         Population: 5,859 PokémonInteractions: 114 sent / 114 received
@@ -160,34 +162,40 @@
 
         (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)*/
         /*var rateHave = ;*/
-        var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+        rateHave = rateCalc(timeMin*60+timeSec);//if it's doing these calculations every 5 seconds, divide by 5s
 
 
 
 
         if(pokerus){
             announcie(remainTime,((numPop-numInt)/remainTime),//remaining time + rate needed 2 beat pokerus
-                      /*rateCalc(),*/ rateHave,
                       numPop, numInt);
         }
 
         else{
-            announcie(remainTime, 1, rateHave, numPop, numInt);
+            announcie(remainTime, 1, numPop, numInt);
         }
     }
 
 
 
-    function rateCalc(rateHave){
-        /*var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time*/
+    function rateCalc(thisTime){
         //to add, array system
-        //return actual speed plz;
+        //shift() to remove front of array, push() to push to back.
+        if(lastTime != 0){//on the 1st loop, don't calculate yet.
+            rates.shift();
+            rates.push((numInt-pastInt)/(thisTime-lastTime));
+        }
 
+        lastTime = thisTime;
+
+        return (rates[0]+rates[1]+rates[2])/3;
+        //
     }
 
 
 
-    function announcie(remainTime, rateNeed, rateHave, numPop, numInt){
+    function announcie(remainTime, rateNeed, numPop, numInt){
         var stringy = "";
 
         if(remainTime < 30 && pokerus){//say that pkrs is almost done
