@@ -41,7 +41,7 @@
     var numInt = 0;
     var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
-    var rates = [0,0,0,0];
+    var rates = [], rLength = 5;
     var rateHave = 0;
     var lastTime = 0;//last int count + last time in seconds based on site clock
     window.addEventListener("load", starter);
@@ -183,54 +183,61 @@
         //to add, array system
         //shift() to remove front of array, push() to push to back.
         if(lastTime != 0){//on the 1st loop, don't calculate yet.
-            rates.shift();
-            rates.push((numInt-pastInt)/(thisTime-lastTime));
+            if(rates.length > 0 &&
+               !((numInt-pastInt > 0) && (rLength > rates.length))){/*if the array's length is 0, no shift, also dont if there's new interactions and
+            the rLength is > the total length*/
+                rates.shift();
+            }
+
+            if((numInt-pastInt) > 0){//if the interactions didnt change, dont push anything.
+               rates.push((numInt-pastInt)/(thisTime-lastTime));
         }
-
-        lastTime = thisTime;
-
-        return (rates[0]+rates[1]+rates[2])/3;
-        //
     }
 
+    lastTime = thisTime;
+
+    return (rates[0]+rates[1]+rates[2])/3;
+    //
+}
 
 
-    function announcie(remainTime, rateNeed, numPop, numInt){
-        var stringy = "";
 
-        if(remainTime < 30 && pokerus){//say that pkrs is almost done
-            //plain pokerus, needsrateHave, numPop, numInt
+ function announcie(remainTime, rateNeed, numPop, numInt){
+    var stringy = "";
 
-            stringy += `PKRS almost done...
+    if(remainTime < 30 && pokerus){//say that pkrs is almost done
+        //plain pokerus, needsrateHave, numPop, numInt
+
+        stringy += `PKRS almost done...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-            announcer.textContent = stringy;
-        }
+        announcer.textContent = stringy;
+    }
 
-        else if(pokerus){//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
-            //plain pokerus, needs rateNeed, rateHave, numPop, numInt
+    else if(pokerus){//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
+        //plain pokerus, needs rateNeed, rateHave, numPop, numInt
 
-            //display clik/sec, & click/sec needed 2 fullclick
-            /*
+        //display clik/sec, & click/sec needed 2 fullclick
+        /*
             console.log("You're doing %.2f clicks/min right now (%d click/sec)", (rateHave*60), rateHave);
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
 
-            // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
-            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
+        // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
+        stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-            announcer.textContent = stringy;
-        }
+        announcer.textContent = stringy;
+    }
 
-        else{//main, needs rateHave, numPop, numInt
-            stringy += `You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
+    else{//main, needs rateHave, numPop, numInt
+        stringy += `You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-            announcer.textContent = stringy;
-
-        }
+        announcer.textContent = stringy;
 
     }
+
+}
 
 
 
