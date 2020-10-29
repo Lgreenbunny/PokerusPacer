@@ -37,7 +37,7 @@
     //
     //gets the date, curent population and sent interactions, should ong fetch pop. once tbh, wait until element loaded 1st.
     var /*pop, */pastInt = 0;
-    var pokerus = true, total = true;//runs pokerus and total functions
+    var pokerus = true, main = true;//runs pokerus and basic loop
     var numInt = 0;
     var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
@@ -83,8 +83,15 @@
         //console.log(dateATM);
         //console.log(pop);
         //console.log(inter);*/
-        clickCalc(dateATM, inter);
+        if(main){clickCalc(dateATM, inter);}
+        //if(pokerus){pokerusCalc();}
     }
+
+
+
+
+
+
 
     function clickCalc(date, interac){
         var stringy = "";
@@ -126,64 +133,102 @@
         //console.log(numPop + "\t" + numInt + "\n%" + (100*numInt/numPop));//gets the strings correctly in percent form <3
 
 
+        //get time with similar string things as above, just condensed ^
+        var minStart = 3 + date.search("\\d{2}:\\d{2}:\\d{2}");//starting from min & seconds
+        var timeMin = parseInt(
+            date.substring(
+                minStart,
+                (minStart+2)
+            )
+        );
+
+        var timeSec = parseInt(
+            date.substring(
+                minStart+3,
+                date.length
+            )
+        );
+
+        //use past int & current int to calculate remaining sec
+        var remainTime = (15*60) - ((timeMin % 15)*60) - timeSec;
+
+
+
+        /*used for checking if you're fast enough for complete pokerus, or just the speed you're going for the main loop
+
+        will be replaced with rateCalc function
+
+        (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)*/
+        /*var rateHave = ;*/
+        var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+
 
 
 
         if(pokerus){
-            //do this SECOND.
-            //get time with similar string things as above, just condensed ^
-            var minStart = 3 + date.search("\\d{2}:\\d{2}:\\d{2}");//starting from min & seconds
-            var timeMin = parseInt(
-                date.substring(
-                    minStart,
-                    (minStart+2)
-                )
-            );
+            announcie(remainTime,((numPop-numInt)/remainTime),//remaining time + rate needed 2 beat pokerus
+                      /*rateCalc(),*/ rateHave,
+                      numPop, numInt);
+        }
 
-            var timeSec = parseInt(
-                date.substring(
-                    minStart+3,
-                    date.length
-                )
-            );
-
-            //console.log(timeMin + " = min\t" + timeSec + " = sec");
-            // 27/Sep/2020 05:52:09
-            //Pokerus speed calc here using ^ information above, put function heer
-            //use past int & current int to calculate how fast per 10sec, then div by 10
-            var remainTime = (15*60) - ((timeMin % 15)*60) - timeSec;
+        else{
+            announcie(remainTime, 1, rateHave, numPop, numInt);
+        }
+    }
 
 
-            if(remainTime < 30){//say that pkrs is almost done
-                announcer.textContent = "PKRS almost done...";
-            }
-            else{//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
 
-                var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time
+    function rateCalc(rateHave){
+        /*var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time*/
+        //to add, array system
+        //return actual speed plz;
 
-                //console.log("%.2f clicks/min needed to beat pokerus (%d click/sec)...", (rateNeed*60), rateNeed);
-                //calc if it's fast enough for complete pokerus, (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)
-                /*var rateHave = ;*/
-                var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+    }
 
-                //display clik/sec, & click/sec needed 2 fullclick
-                /*
+
+
+    function announcie(remainTime, rateNeed, rateHave, numPop, numInt){
+        var stringy = "";
+
+        if(remainTime < 30 && pokerus){//say that pkrs is almost done
+            //plain pokerus, needsrateHave, numPop, numInt
+
+            stringy += `PKRS almost done...
+You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
+You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
+            announcer.textContent = stringy;
+        }
+
+        else if(pokerus){//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
+            //plain pokerus, needs rateNeed, rateHave, numPop, numInt
+
+            //display clik/sec, & click/sec needed 2 fullclick
+            /*
             console.log("You're doing %.2f clicks/min right now (%d click/sec)", (rateHave*60), rateHave);
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
 
-                // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
-                stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
+            // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
+            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-                printCSSssS(stringy);
-            }
+            announcer.textContent = stringy;
+        }
+
+        else{//main, needs rateHave, numPop, numInt
+            stringy += `You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
+You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
+            announcer.textContent = stringy;
 
         }
+
     }
 
-    function printCSSssS(stringy){
-        //console.log(stringy);//will be replaced with CSS/HTML manipulationss
-        announcer.textContent = stringy;
-    }
+
+
+
+
+
+
+
 })();
