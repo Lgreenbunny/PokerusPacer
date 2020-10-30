@@ -8,10 +8,12 @@
 // @grant        GM_listValues
 // @grant        GM_getValue
 // @grant        GM_getResourceText
+// @run-at       document-start
 // ==/UserScript==
 
 (function() {
     'use strict';
+
 
 
     /*
@@ -39,9 +41,15 @@
     var /*pop, */pastInt = 0;
     var pokerus = true, main = true;//runs pokerus and basic loop
     var numInt = 0;
-    var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
+    var refreshR = 2;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
-    window.addEventListener("load", starter);
+    var rates = [], rLength = 6, delet = 0;
+    var rateHave = 0;
+    var lastTime = 0;//last int count + last time in seconds based on site clock
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+        setTimeout(starter, 2000)
+    });//when document loads, start da script for real... but 2 seconds after it loads to wait for any other QOL.
 
     //populationcount and clickcount_act_sent arent div, they're SPANS?.
     //check element id
@@ -51,6 +59,7 @@
         //pop = document.getElementById("field_globalmeta"); //these 2 are in div field_globalmeta
         inter = document.getElementById("field_globalmeta").textContent;*/
         loopy();
+        console.log("Pacer is starting to run!");
     }
 
 
@@ -58,11 +67,15 @@
     function loopy(){
 
         setInterval(updaterer, (refreshR*1000));//runs main loop every #s.
+        console.log("Pacer has started running!");
+
         announcer = document.createElement("p");
         announcer.setAttribute("id", "Pokerus_Pacer");
         announcer.textContent = "Loading...";
         document.getElementById("field_field").insertAdjacentElement('afterend', announcer);
-
+        //https://www.w3schools.com/jsref/dom_obj_style.asp all the style propertiessss
+        announcer.style.whiteSpace = "pre-wrap";//allows the new lines and spaces from the string to carry over into the paragraph.
+        announcer.style.textAlign = "center";
         setTimeout(function d(){
             var e = document.getElementsByName("Pokerus_Pacer").length;
             if(e = 0){
@@ -94,7 +107,6 @@
 
 
     function clickCalc(date, interac){
-        var stringy = "";
         /*date & interaction formats:
         27/Sep/2020 05:52:09 (used for the pokerus timer in the future, just get it to display massclick stuff for now)
         Population: 5,859 PokémonInteractions: 114 sent / 114 received
@@ -160,34 +172,65 @@
 
         (population-total int)/TIME LEFT (15 - serverTimeMINUTES mod 15)*/
         /*var rateHave = ;*/
-        var rateHave = (numInt - pastInt)/refreshR;//if it's doing these calculations every 5 seconds, divide by 5s
+        rateHave = rateCalc(timeMin*60+timeSec);//if it's doing these calculations every 5 seconds, divide by 5s
 
 
 
 
         if(pokerus){
             announcie(remainTime,((numPop-numInt)/remainTime),//remaining time + rate needed 2 beat pokerus
-                      /*rateCalc(),*/ rateHave,
                       numPop, numInt);
         }
 
         else{
-            announcie(remainTime, 1, rateHave, numPop, numInt);
+            announcie(remainTime, 1, numPop, numInt);
         }
     }
 
 
 
-    function rateCalc(rateHave){
-        /*var rateNeed = (numPop-numInt)/remainTime; //per second, based on pokerus time*/
+    function rateCalc(thisTime){
         //to add, array system
-        //return actual speed plz;
+        //shift() to remove front of array, push() to push to back.
+        if(lastTime != 0){//on the 1st loop, don't calculate yet.
+            if(rates.length > 0 &&
+               !((numInt-pastInt > 0) && (rLength > rates.length))){/*if the array's length is 0, no shift, also dont if there's new interactions and
+            the rLength is > the total length*/
+                rates.shift();
+            }
 
+            if((numInt-pastInt) > 0){//if the interactions didnt change, dont push anything.
+                rates.push((numInt-pastInt)/(thisTime-lastTime));
+                delet = 0;
+            }
+            else{//if the clicker is inactive for half the refresh time, it erases the averages.
+                delet++;
+                if(delet > (rLength/2)){
+                    //https://www.tutorialspoint.com/in-javascript-how-to-empty-an-array, don't use this array anywhere else 4 now
+                    rates = [];
+                    delet = 0;
+                }
+            }
+        }
+
+        lastTime = thisTime;
+
+        //return (rates[0]+rates[1]+rates[2])/3;
+
+        /*does a function to every element in the array.
+        also if the length of the array's 0, return a 0 (would make it false), otehrwise return the actual average with the elements of the array
+        */
+        return rates.length != 0 ? rates.reduce(reducing)/(rates.length*1.0) : 0;
+        //https://www.w3schools.com/jsref/jsref_reduce.asp
+        //
     }
 
 
+    function reducing(total, num){//for each element in teh array, add to total
+        return total+num;
+    }
 
-    function announcie(remainTime, rateNeed, rateHave, numPop, numInt){
+    function announcie(remainTime, rateNeed, numPop, numInt){
         var stringy = "";
 
         if(remainTime < 30 && pokerus){//say that pkrs is almost done
