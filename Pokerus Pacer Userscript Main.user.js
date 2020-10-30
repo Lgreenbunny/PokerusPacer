@@ -8,15 +8,13 @@
 // @grant        GM_listValues
 // @grant        GM_getValue
 // @grant        GM_getResourceText
-// @run-at document-body
+// @run-at       document-start
 // ==/UserScript==
 
 (function() {
     'use strict';
 
 
-
-    //the run-at document-end/body might help, but might not
 
     /*
        *e
@@ -48,7 +46,10 @@
     var rates = [], rLength = 6, delet = 0;
     var rateHave = 0;
     var lastTime = 0;//last int count + last time in seconds based on site clock
-    window.addEventListener("load", starter);
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+        setTimeout(starter, 2000)
+    });//when document loads, start da script for real... but 2 seconds after it loads to wait for any other QOL.
 
     //populationcount and clickcount_act_sent arent div, they're SPANS?.
     //check element id
