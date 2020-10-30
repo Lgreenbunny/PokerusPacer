@@ -39,9 +39,9 @@
     var /*pop, */pastInt = 0;
     var pokerus = true, main = true;//runs pokerus and basic loop
     var numInt = 0;
-    var refreshR = 4;//how fast it refreshes in seconds, dont make it go below 4?
+    var refreshR = 2;//how fast it refreshes in seconds, dont make it go below 4?
     var announcer;
-    var rates = [], rLength = 5;
+    var rates = [], rLength = 6, delet = 0;
     var rateHave = 0;
     var lastTime = 0;//last int count + last time in seconds based on site clock
     window.addEventListener("load", starter);
@@ -65,7 +65,9 @@
         announcer.setAttribute("id", "Pokerus_Pacer");
         announcer.textContent = "Loading...";
         document.getElementById("field_field").insertAdjacentElement('afterend', announcer);
-
+        //https://www.w3schools.com/jsref/dom_obj_style.asp all the style propertiessss
+        announcer.style.whiteSpace = "pre-wrap";//allows the new lines and spaces from the string to carry over into the paragraph.
+        announcer.style.textAlign = "center";
         setTimeout(function d(){
             var e = document.getElementsByName("Pokerus_Pacer").length;
             if(e = 0){
@@ -190,54 +192,72 @@
             }
 
             if((numInt-pastInt) > 0){//if the interactions didnt change, dont push anything.
-               rates.push((numInt-pastInt)/(thisTime-lastTime));
+                rates.push((numInt-pastInt)/(thisTime-lastTime));
+                delet = 0;
+            }
+            else{//if the clicker is inactive for half the refresh time, it erases the averages.
+                delet++;
+                if(delet > (rLength/2)){
+                    //https://www.tutorialspoint.com/in-javascript-how-to-empty-an-array, don't use this array anywhere else 4 now
+                    rates = [];
+                    delet = 0;
+                }
+            }
         }
+
+        lastTime = thisTime;
+
+        //return (rates[0]+rates[1]+rates[2])/3;
+
+        /*does a function to every element in the array.
+        also if the length of the array's 0, return a 0 (would make it false), otehrwise return the actual average with the elements of the array
+        */
+        return rates.length != 0 ? rates.reduce(reducing)/(rates.length*1.0) : 0;
+        //https://www.w3schools.com/jsref/jsref_reduce.asp
+        //
     }
 
-    lastTime = thisTime;
 
-    return (rates[0]+rates[1]+rates[2])/3;
-    //
-}
+    function reducing(total, num){//for each element in teh array, add to total
+        return total+num;
+    }
 
+    function announcie(remainTime, rateNeed, numPop, numInt){
+        var stringy = "";
 
+        if(remainTime < 30 && pokerus){//say that pkrs is almost done
+            //plain pokerus, needsrateHave, numPop, numInt
 
- function announcie(remainTime, rateNeed, numPop, numInt){
-    var stringy = "";
-
-    if(remainTime < 30 && pokerus){//say that pkrs is almost done
-        //plain pokerus, needsrateHave, numPop, numInt
-
-        stringy += `PKRS almost done...
+            stringy += `PKRS almost done...<br>
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-        announcer.textContent = stringy;
-    }
+            announcer.textContent = stringy;
+        }
 
-    else if(pokerus){//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
-        //plain pokerus, needs rateNeed, rateHave, numPop, numInt
+        else if(pokerus){//print the clicking status~ this check shouldnt run unless the pkrs option is selected in the future~
+            //plain pokerus, needs rateNeed, rateHave, numPop, numInt
 
-        //display clik/sec, & click/sec needed 2 fullclick
-        /*
+            //display clik/sec, & click/sec needed 2 fullclick
+            /*
             console.log("You're doing %.2f clicks/min right now (%d click/sec)", (rateHave*60), rateHave);
             console.log("You'll finish these fields in: %.2f min (%.2f sec)", ((numPop-numInt)/(rateHave)/60), ((numPop-numInt)/(rateHave)));
             */
 
-        // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
-        stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
+            // number.toFixed(digits) rounds number or pads number so it has the right amount of digits after the decimal point
+            stringy += `${(rateNeed*60).toFixed(2)} clicks/min needed to beat pokerus (${rateNeed.toFixed(2)} click/sec)...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-        announcer.textContent = stringy;
-    }
+            announcer.textContent = stringy;
+        }
 
-    else{//main, needs rateHave, numPop, numInt
-        stringy += `You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
+        else{//main, needs rateHave, numPop, numInt
+            stringy += `You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
-        announcer.textContent = stringy;
+            announcer.textContent = stringy;
+
+        }
 
     }
-
-}
 
 
 
