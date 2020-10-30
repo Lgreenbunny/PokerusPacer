@@ -8,11 +8,15 @@
 // @grant        GM_listValues
 // @grant        GM_getValue
 // @grant        GM_getResourceText
+// @run-at document-body
 // ==/UserScript==
 
 (function() {
     'use strict';
 
+
+
+    //the run-at document-end/body might help, but might not
 
     /*
        *e
@@ -54,6 +58,7 @@
         //pop = document.getElementById("field_globalmeta"); //these 2 are in div field_globalmeta
         inter = document.getElementById("field_globalmeta").textContent;*/
         loopy();
+        console.log("Pacer is starting to run!");
     }
 
 
@@ -61,6 +66,8 @@
     function loopy(){
 
         setInterval(updaterer, (refreshR*1000));//runs main loop every #s.
+        console.log("Pacer has started running!");
+
         announcer = document.createElement("p");
         announcer.setAttribute("id", "Pokerus_Pacer");
         announcer.textContent = "Loading...";
