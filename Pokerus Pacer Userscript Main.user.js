@@ -228,7 +228,7 @@
         if(remainTime < 30 && pokerus){//say that pkrs is almost done
             //plain pokerus, needsrateHave, numPop, numInt
 
-            stringy += `PKRS almost done...<br>
+            stringy += `PKRS almost done...
 You're doing ${(rateHave*60).toFixed(2)} clicks/min right now (${rateHave.toFixed(2)} click/sec)...
 You'll finish these fields in: ${((numPop-numInt)/rateHave/60).toFixed(2)} min (${((numPop-numInt)/rateHave).toFixed(2)} sec)!`;
             announcer.textContent = stringy;
