@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Trade aids for impatient people~
 // @author       Lgreenbunny
-// @match        https://pokefarm.com/fields/*
+// @match        https://pokefarm.com/fields
 // @match        https://pokefarm.com/trade/setup/pkmn/*
 // @grant        GM_listValues
 // @grant        GM_getValue
@@ -17,9 +17,11 @@
     'use strict';
 
     var ready = false;//program ready to run
-    var button;// button to start searching document for urls
-    var trade = false;//change the trading page
+    var trade = false;//change the trading page, switch with a checkbox
 
+    var txt;
+    var button;// button to start searching document for urls
+    var background;
     //setup program
     document.addEventListener("DOMContentLoaded", (event) => {
         setTimeout(preparing, 1000);//makes elements for the program & other thing, once
@@ -31,12 +33,25 @@
     function preparing(){//change different things depending on the page you're on, field v. trading
         //FIELD SECTION
         //make elements
+        background=document.createElement("div");
+        txt=document.createElement("p");
 
-        //place in right spot
+        button=document.createElement("button");
+        button.type = "button";
+        var butText = document.createElement("p");
+        butText.textContent = "Hi";
+        button.appendChild(butText);
 
+
+
+        background.appendChild(txt);
+        background.appendChild(button);
+        //place in right spot, right below the field for now~
+
+        document.getElementById("field_field").insertAdjacentElement('afterend', background);
         //add button event function
 
-
+        document.addEventListener("click", butHit);
 
         //TRADE SECTION (pkmn-setup trade)
         //move element-function
@@ -48,12 +63,21 @@
     }
 
     function butHit(){//the function when the button is hit
-    //start scanning document for field
-
+        //start scanning document for field
+        ready=false;
+        //https://drafts.csswg.org/selectors/#overview
+        //https://stackoverflow.com/questions/14377590/queryselector-and-queryselectorall-vs-getelementsbyclassname-and-getelementbyid
+        var arrr = document.querySelectorAll('#fieldmontip a[href^="/summary/"]');//#divId selector
         //add valid summary links to array
+        //element.href returns the path of the href thing
+        var sArrr = [];
+        arrr.forEach(e => {
+            sArrr.push(e.href);
+        });
+        //summary/hello isnt a valid linkk
 
-        var arrr = [];
-        /*resultThing(arrr)*/
+
+        resultThing(sArrr);
     }
 
 
@@ -67,6 +91,11 @@
 
     function resultThing(arrr){
         //update text of result field with the urls of the field...
+        arrr.forEach(e=>{
+            console.log(e + "\n");
+        });
+
+        ready=true;
     }
 
     //grab the html element with the info
