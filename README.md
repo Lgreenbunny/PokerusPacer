@@ -11,4 +11,4 @@ It only runs when you're massclicking, but if you don't see the status text at t
 
 # TradeHelpter
 Yes I'm calling it that.
-More to come soon
+A very basic version's available on this branch, maybe shut off the script with tampermonkey when you want to turn it off, though ^^'
